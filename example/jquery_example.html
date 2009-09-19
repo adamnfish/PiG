@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>PushIt test page</title>
+	<script src="jquery-1.3.2.min.js"></script>
+	<script src="../jquery.pig.js"></script>
+	<script>
+var myPiG;
+(function($){
+	$(function(){
+		myPiG = $.PiG({
+			url: "example_serverside.php",
+			onPush: function(response) {
+				console.log("success", response);
+			},
+			onClose: function(){
+				console.log("request closed (no data)");
+			},
+			error: function(obj, status, error){
+				console.log("error", obj, error, status);
+			}
+		});
+		
+		$("#open").click(function(e){
+			e.preventDefault();
+			// opens connection to the server ready for push data
+			myPiG.open();
+		});
+		$("#close").click(function(e){
+			e.preventDefault();
+			// cancels current request and stops listening for push data
+			myPiG.close(true);
+		});
+	});
+})(jQuery);
+	</script>
+</head>
+
+<body>
+	<h1>PiG test</h1>
+	<p>
+		<a href="#" id="open">Start push connection</a>
+		|
+		<a href="#" id="close">Stop push connection</a>
+	</p>
+</body>
+</html>

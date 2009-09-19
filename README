@@ -1,5 +1,19 @@
-Coming soon...
-
 Push it Good (PiG) - a JavaScript push engine with PHP backend
 
-PiG is a simple push server implemented in PHP with a jQuery plugin / MooTools class to power the front end
+PiG is a simple push server implemented in PHP with a jQuery plugin / MooTools (coming soon) class to power the front end
+
+This code gives a simple framework for creating a push request. It requires that you add application logic by the following methods:
+
+1) Extend the PiG PHP class to preform the check for your application (eg. checking for new unread email) and return the information your client-side code needs - you can also set the default poll interval and maximum open connection time
+2) use the client-side PiG plugin events to perform whatever actions you need when information is returned from the server
+
+An example of usage is included - extremely spartan. I'll add a more detailed one ASAP
+
+*NOTE:
+Event callback names are a mess at the moment - I need to sort this!
+
+TODO
+ -	Sort out the event callback names and invocations
+  -	Use milliseconds for the poll time - it's ridiculous to use seconds for the poll!
+ -	algorithimic open request time in case there is a network problem preventing requests from being maintained for the default time (unlikely, but which would result in lost data)
+ -	Have some way fo passing the last sent item? Maybe leave this up to the extended code?
