@@ -30,10 +30,8 @@ var PiG = new Class({
 			onSuccess: function(){
 				if(204 === this.request.status){
 					this.fireEvent("onClose", arguments);
-					this.reopen();
 				} else{
 					this.fireEvent("onPush", arguments);
-					
 				}
 				if(this.options.keep_open){
 					this.timer = this.reopen.delay(this.options.repeatDelay || 0, this);
