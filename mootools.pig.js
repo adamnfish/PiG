@@ -25,7 +25,7 @@ var PiG = new Class({
 	
 	Initialize: function(url, options){
 		this.setOptions(options);
-		options.request = $merge(options.request, {
+		this.options.request = $merge(this.options.request, {
 			url: url,
 			onSuccess: function(){
 				if(204 === this.request.status){
@@ -33,31 +33,29 @@ var PiG = new Class({
 					this.reopen();
 				} else{
 					this.fireEvent("onPush", arguments);
-					this.reopen();
+					
+				}
+				if(this.options.keep_open){
+					this.timer = this.reopen.delay(this.options.repeatDelay || 0, this);
 				}
 			}.bind(this),
 			onFailure: function(){
-				this.fireEvent("onFail");
+				this.fireEvent("onFail", arguments);
 			}.bind(this)
 		});
-		this.request = new Request(options);
+		this.request = new Request(this.options.request);
 		this.timer = false;
 		this.waiting = false;
 	},
-	
 	open_socket: function(){
 		this.request.send();
 		return this;
-	},
+	}.protect(),
 	reopen: function(){
-		if(this.options.keep_open){
-			this.timer = (function(){
-				this.fireEvent("onReopen");
-				this.open_socket();
-			}).delay(this.options.repeatDelay || 0, this);
-		}
+		this.fireEvent("onReopen");
+		this.open_socket();
 		return this;
-	},
+	}.protect(),
 	open: function(){
 		if(!this.request.running){
 			this.fireEvent("onOpen");
@@ -70,5 +68,4 @@ var PiG = new Class({
 		$clear(this.timer);
 		this.fireEvent("onAbort");
 	}
-	
 });
