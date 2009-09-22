@@ -26,6 +26,7 @@ var PiG = new Class({
 	Initialize: function(url, options){
 		this.setOptions(options);
 		options.request = $merge(options.request, {
+			url: url,
 			onSuccess: function(){
 				if(204 === this.request.status){
 					this.fireEvent("onClose", arguments);
