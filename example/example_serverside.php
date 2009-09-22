@@ -4,7 +4,7 @@ require("../PiG.php");
 
 class MyPIG extends PiG
 {
-	var $maintainTime = 10;
+	var $maintainTime = 50;
 	var $pollTime = 2;
 	
 	function CheckCondition()

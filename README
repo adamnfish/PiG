@@ -13,7 +13,14 @@ An example of usage is included - extremely spartan. I'll add a more detailed on
 Event callback names are a mess at the moment - I need to sort this!
 
 TODO
- -	Sort out the event callback names and invocations
-  -	Use milliseconds for the poll time - it's ridiculous to use seconds for the poll!
+ -	Use milliseconds for the poll time - it's ridiculous to use seconds for the poll!
  -	algorithimic open request time in case there is a network problem preventing requests from being maintained for the default time (unlikely, but which would result in lost data)
- -	Have some way fo passing the last sent item? Maybe leave this up to the extended code?
+ -	Have some way of passing the last sent item? Maybe leave this up to the extended code?
+ -	Try to reopen if the ajax call fails (maybe only try this a couple of times before invoking a hard "shizzle's broken" callback?
+
+
+Changelog:
+22/09/2009
+Sanity-checked callbacks and function names
+Prevented connection from opening if it's already opened - just returns the existing handle
+Updated example to include new callbacks and set the maintain time to something more useful

@@ -33,11 +33,12 @@
 			var	successCallback = options.success,
 				errorCallback = options.error,
 				request = false,
-				// public functions
 				timer = false,
-				open = function(){
+				handle = false,
+				waiting = false,
+				open_socket = function(){
 					request = $.ajax(options);
-					options.onOpen();
+					waiting = true;
 				},
 				reopen = function(){
 					if(options.keep_open){
@@ -45,44 +46,50 @@
 						if(options.repeatDelay){
 							setTimeout(function(){
 								options.onReopen();
-								open();
+								open_socket();
 							}, options.repeatDelay);
 						} else{
 							options.onReopen();
-							request = $.ajax(options);
+							open_socket();
 						}
 					}
 				},
-				close = function(immediate){
-					if(immediate && request){
+				// these functions comprise the returned 'handle'
+				open = function(){
+					if(!waiting){
+						options.onOpen();
+						open_socket();
+					}
+					return handle;
+				},
+				close = function(){
+					if(request){
 						request.abort();
+						waiting = false;
+						clearTimeout(timer);
+						options.onAbort();
 					}
-					clearTimeout(timer);
-					options.onClose();
-				},
-				// the actual AJAX success callback
-				success = function(response){
-					if(204 == request.status){
-						options.onClose();
-						reopen();
-					} else{
-						successCallback(arguments);
-						options.onPush(arguments);
-						reopen();
-					}
-				},
-				// the actual AJAX error callback
-				error = function(){
-					errorCallback.apply(this, arguments);
+					return handle;
 				};
 			
-			options.success = success;
+			options.success	 = function(response){
+				waiting = false;
+				if(204 == request.status){
+					options.onClose();
+					reopen();
+				} else{
+					successCallback(arguments);
+					options.onPush(arguments);
+					reopen();
+				}
+			};
 			options.error = function(){
-				error(arguments);
+				waiting = false;
+				errorCallback.apply(this, arguments);
 				options.onFail(arguments);
 			};
 			
-			return {
+			return handle = {
 				close: close,
 				open: open
 			};

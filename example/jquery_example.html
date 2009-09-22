@@ -14,14 +14,23 @@ var myPiG;
 	$(function(){
 		myPiG = $.PiG({
 			url: "example_serverside.php",
-			onPush: function(response) {
-				console.log("success", response);
+			onOpen: function(){
+				console.info("(onOpen)", "opening connection to server");
+			},
+			onPush: function(response){
+				console.info("(onPush)", "success: returned ->", response);
 			},
 			onClose: function(){
-				console.log("request closed (no data)");
+				console.info("(onClose)", "request closed by server (no data)");
 			},
-			error: function(obj, status, error){
-				console.log("error", obj, error, status);
+			onReopen: function(){
+				console.info("(onReopen)", "re-opening the connection to the server");
+			},
+			onAbort: function(){
+				console.info("(onAbort)", "aborting connection to the server from this end");
+			},
+			onFail: function(obj, status, error){
+				console.warn("(onFail)", obj, error, status);
 			}
 		});
 		
